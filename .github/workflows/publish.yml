@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/hddm_s
+      url: https://pypi.org/p/hddm_r
     permissions:
       id-token: write
     steps:
