@@ -75,7 +75,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name = "hddm_r",
-    version = "0.0.1",
+    version = "1.0",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
