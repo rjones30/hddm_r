@@ -28,7 +28,7 @@ sources = {
   "xrootd.url": "https://github.com/rjones30/xrootd.git",
   "xrootd.tag": "stable-4.12-for-hddm",
   "HDDM.url": "https://github.com/rjones30/HDDM.git",
-  "HDDM.tag": "",
+  "HDDM.tag": "streaming_input",
 }
 
 class CMakeExtension(setuptools.Extension):
@@ -174,7 +174,7 @@ else:
                           ]
 setuptools.setup(
     name = "hddm_r",
-    version = "1.0.1",
+    version = "2.0.0",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
