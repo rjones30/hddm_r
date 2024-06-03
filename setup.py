@@ -154,7 +154,10 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 if "win" in sysconfig.get_platform():
-    extension_include_dirs = ["hddm_r", "build\\include"]
+    extension_include_dirs = ["hddm_r", 
+                              "build\\include",
+                              "build\\include\\xrootd",
+                             ]
     extension_library_dirs = ["build\\lib",]
     extension_libraries = ["libhdf5_hl",
                            "libhdf5",
@@ -166,7 +169,10 @@ if "win" in sysconfig.get_platform():
                            "ws2_32",
                           ]
 else:
-    extension_include_dirs = ["hddm_r", "build/include"]
+    extension_include_dirs = ["hddm_r",
+                              "build/include",
+                              "build/include/xrootd",
+                             ]
     extension_library_dirs = ["build/lib"]
     extension_libraries = ["hdf5_hl",
                            "hdf5",
@@ -183,12 +189,10 @@ else:
                            "crypto",
                            "xrootdstream",
                            "XrdCl",
-                           "XrdFfs",
-                           "XrdCrypto",
                           ]
 setuptools.setup(
     name = "hddm_r",
-    version = "2.0.7",
+    version = "2.0.8",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
