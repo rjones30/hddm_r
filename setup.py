@@ -188,11 +188,11 @@ else:
                            "ssl3",
                            "crypto",
                            "xrootdstream",
-                           "XrdCl",
+                           "XrdCl_static",
                           ]
 setuptools.setup(
     name = "hddm_r",
-    version = "2.0.9",
+    version = "2.0.10",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
