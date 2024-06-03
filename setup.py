@@ -174,7 +174,7 @@ else:
                           ]
 setuptools.setup(
     name = "hddm_r",
-    version = "2.0.0",
+    version = "2.0.1",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
@@ -198,8 +198,9 @@ setuptools.setup(
       CMakeExtension("bzip2"),
       CMakeExtension("xerces-c"),
       CMakeExtension("hdf5"),
-      #CMakeExtension("xrootd"),
       CMakeExtension("pthread-win32"),
+      CMakeExtension("cpr"),
+      CMakeExtension("xrootd"),
       CMakeExtension("HDDM"),
       setuptools.Extension("hddm_r",
            include_dirs = extension_include_dirs,
