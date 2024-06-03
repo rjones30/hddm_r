@@ -192,7 +192,7 @@ else:
                           ]
 setuptools.setup(
     name = "hddm_r",
-    version = "2.0.8",
+    version = "2.0.9",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
@@ -226,7 +226,7 @@ setuptools.setup(
            include_dirs = extension_include_dirs,
            library_dirs = extension_library_dirs,
            libraries = extension_libraries,
-           extra_compile_args = ["-std=c++11",
+           extra_compile_args = ["-std=c++17",
                                  "-DHDF5_SUPPORT",
                                  "-DISTREAM_OVER_HTTP",
                                  "-DISTREAM_OVER_XROOTD"
