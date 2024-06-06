@@ -25,8 +25,8 @@ sources = {
   "pthread-win32.tag": "version-3.1.0-release",
   "libuuid.url": "https://github.com/rjones30/libuuid.git",
   "libuuid.tag": "",
-  "openssl.url": "https://github.com/rjones30/openssl.git",
-  "openssl.tag": "",
+  "libxml2.url": "https://github.com/rjones30/libxml2.git",
+  "libxml2.tag": "",
   "cpr.url": "https://github.com/rjones30/cpr.git",
   "cpr.tag": "",
   "xrootd.url": "https://github.com/rjones30/xrootd.git",
@@ -104,8 +104,11 @@ class build_ext_with_cmake(build_ext):
             for arlib in glob.glob(os.path.join("build", "lib64", "*.a")):
                self.spawn(["mkdir", "-p", os.path.join("build", "lib")])
                self.spawn(["cp", arlib, re.sub("/lib64/", "/lib/", arlib)])
-            for arlib in glob.glob(os.path.join("build", "lib*", "*_static.a")):
-               self.spawn(["cp", arlib, re.sub("_static.a", ".a", arlib)])
+            for arlib in glob.glob(os.path.join("build", "lib*", "*.a")):
+               if re.match(r".*_static\.a$", arlib):
+                  self.spawn(["cp", arlib, re.sub(r"_static\.a$", ".a", arlib)])
+               else:
+                  self.spawn(["cp", arlib, re.sub(r"\.a$", "_static.a", arlib)])
             self.spawn(["rm", "-rf", ext.name, f"build.{ext.name}"])
         os.chdir(cwd)
         self.spawn(["ls", "-l", "-R", "build"])
@@ -196,7 +199,7 @@ else:
                           ]
 setuptools.setup(
     name = "hddm_r",
-    version = "2.0.13",
+    version = "2.0.14",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
