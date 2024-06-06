@@ -154,7 +154,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 if "win" in sysconfig.get_platform():
-    extension_include_dirs = ["hddm_r", 
+    extension_include_dirs = ["hddm_r",
                               "build\\include",
                               "build\\include\\xrootd",
                              ]
@@ -171,29 +171,32 @@ if "win" in sysconfig.get_platform():
 else:
     extension_include_dirs = ["hddm_r",
                               "build/include",
+                              "build/include/libxml2",
                               "build/include/xrootd",
                              ]
     extension_library_dirs = ["build/lib"]
-    extension_libraries = ["hdf5_hl",
-                           "hdf5",
+    extension_libraries = ["hdf5_hl_static",
+                           "hdf5_static",
                            "xstream",
                            "bz2_static",
                            "z_static",
-                           "xerces-c",
+                           "xerces-c_static",
                            "pthread",
                            "httpstream",
-                           "cpr",
-                           "curl",
-                           "ssl",
-                           "ssl3",
-                           "crypto",
+                           "cpr_static",
+                           "curl_static",
+                           "ssl_static",
+                           "crypto_static",
                            "xrootdstream",
                            "XrdCl_static",
                            "XrdUtils_static",
+                           "XrdXml_static",
+                           "uuid_static",
+                           "xml2_static",
                           ]
 setuptools.setup(
     name = "hddm_r",
-    version = "2.0.12",
+    version = "2.0.13",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
@@ -219,7 +222,7 @@ setuptools.setup(
       CMakeExtension("hdf5"),
       CMakeExtension("pthread-win32"),
       CMakeExtension("libuuid"),
-      CMakeExtension("openssl"),
+      CMakeExtension("libxml2"),
       CMakeExtension("cpr"),
       CMakeExtension("xrootd"),
       CMakeExtension("HDDM"),
