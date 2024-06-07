@@ -139,13 +139,13 @@ class build_ext_with_cmake(build_ext):
                     self.spawn(["hddm-py", model])
                     self.spawn(["cp", f"py{module}.cpy", f"py{module}.cpp"])
                     os.chdir(cwd)
-                    self.spawn(["sleep", "100000"])
 
 
 class install_ext_solibs(install_lib):
 
     def run(self):
         super().run()
+        self.spawn(["sleep", "100000"])
         for wheel in glob.glob("build/bdist.*/wheel"):
             for solib in os.listdir(wheel):
                 for mext in re.finditer("^([^/]*).cpython.*", solib):
@@ -199,7 +199,7 @@ else:
                           ]
 setuptools.setup(
     name = "hddm_r",
-    version = "2.0.16",
+    version = "2.0.17",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
