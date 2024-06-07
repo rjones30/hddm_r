@@ -1,2 +1,2 @@
-include models/*.xml
+include hddm_r/*.xml
 include scripts/*.bat
