@@ -92,7 +92,6 @@ class build_ext_with_cmake(build_ext):
         ]
         if sysconfig.get_platform() == "win32":
             cmake_args += ["-A", "Win32"]
-        cmake_args += [f"-DBUILD_SHARED_LIBS:BOOL=off"]
         self.spawn([cmake, f"../{ext.name}"] + cmake_args)
         if not self.dry_run:
             self.spawn([cmake, "--build", "."] + build_args + ["-j4"])
@@ -140,6 +139,7 @@ class build_ext_with_cmake(build_ext):
                     self.spawn(["hddm-py", model])
                     self.spawn(["cp", f"py{module}.cpy", f"py{module}.cpp"])
                     os.chdir(cwd)
+                    self.spawn(["sleep", "100000"])
 
 
 class install_ext_solibs(install_lib):
@@ -199,7 +199,7 @@ else:
                           ]
 setuptools.setup(
     name = "hddm_r",
-    version = "2.0.15",
+    version = "2.0.16",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
