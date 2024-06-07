@@ -145,7 +145,6 @@ class install_ext_solibs(install_lib):
 
     def run(self):
         super().run()
-        self.spawn(["sleep", "100000"])
         for wheel in glob.glob("build/bdist.*/wheel"):
             for solib in os.listdir(wheel):
                 for mext in re.finditer("^([^/]*).cpython.*", solib):
@@ -199,7 +198,7 @@ else:
                           ]
 setuptools.setup(
     name = "hddm_r",
-    version = "2.0.17",
+    version = "2.0.18",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
