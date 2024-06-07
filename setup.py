@@ -212,10 +212,8 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],                                      # Information to filter the project on PyPi website
     python_requires = '>=3.6',              # Minimum version requirement of the package
-    #packages = templates.keys(),           # Name of the python package
-    #install_requires = [                    # Install other dependencies if any
+    #install_requires = [                   # Install other dependencies if any
     #  "setuptools-git",
-    #  "xrootd",
     #],
     ext_modules = [
       CMakeExtension("zlib"),
