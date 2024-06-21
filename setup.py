@@ -55,6 +55,10 @@ class build_ext_with_cmake(build_ext):
     def build_with_cmake(self, ext):
         if "win" in ext.name and not "win" in sysconfig.get_platform():
             return 0
+        elif "xrootd" in ext.name and "win" in sysconfig.get_platform():
+            return 0
+        elif ext.name[:3] == "lib" and "win" in sysconfig.get_platform():
+            return 0
         cwd = os.getcwd()
         if f"{ext.name}.url" in sources:
             if not os.path.isdir(ext.name):
@@ -72,11 +76,11 @@ class build_ext_with_cmake(build_ext):
         cmake_config = "Debug" if self.debug else "Release"
         build_args = ["--config", cmake_config]
         if shutil.which("cmake"):
-            cmake = "cmake"
+            cmake = ["cmake"]
         else:
             # Only happens on Windows, try to install it
             self.spawn(["scripts/install_cmake.bat"])
-            cmake = "cmake.exe"
+            cmake = ["cmake.exe"]
 
         build_temp = f"build.{ext.name}"
         if not os.path.isdir(build_temp):
@@ -88,17 +92,29 @@ class build_ext_with_cmake(build_ext):
           f"-DCMAKE_BUILD_TYPE={cmake_config}",
           f"-DBUILD_SHARED_LIBS:bool=off",
           f"-DCMAKE_POSITION_INDEPENDENT_CODE:bool=on",
-          f"-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON",
+          f"-DCMAKE_OSX_DEPLOYMENT_TARGET=10.15",
+          f"-DCMAKE_VERBOSE_MAKEFILE:BOOL=on",
         ]
         if sysconfig.get_platform() == "win32":
             cmake_args += ["-A", "Win32"]
-        self.spawn([cmake, f"../{ext.name}"] + cmake_args)
+        elif "arm64" in sysconfig.get_platform():
+            cmake_args += [f"-DCMAKE_OSX_ARCHITECTURES=arm64"]
+        if "xrootd" in ext.name:
+            cmake_args += [f"-DXRDCL_LIB_ONLY:bool=on"]
+        self.spawn(cmake + [f"../{ext.name}"] + cmake_args)
+        if "xerces" in ext.name and sysconfig.get_platform != "win32":
+            for inc in glob.glob(os.path.join(cwd, "build", "include", "uuid", "uuid.h")):
+                self.spawn(echo + mv + [inc, inc + "idden"])
+                self.spawn(mv + [inc, inc + "idden"])
         if not self.dry_run:
-            self.spawn([cmake, "--build", "."] + build_args + ["-j4"])
-            self.spawn([cmake, "--install", "."])
+            if "uuid" in ext.name or sysconfig.get_platform() == "win32":
+                self.spawn(cmake + ["--build", "."] + build_args)
+            else:
+                self.spawn(cmake + ["--build", "."] + build_args + ["-j4"])
+            self.spawn(cmake + ["--install", "."])
             os.chdir(cwd)
             for solib in glob.glob(os.path.join("build", "lib", "*.so*")):
-               self.spawn(["mkdir", "-p", os.path.join("build", "lib64")])
+               self.spawn(["mkdir", os.path.join("build", "lib64")])
                self.spawn(["cp", solib, re.sub("/lib/", "/lib64/", solib)])
             for arlib in glob.glob(os.path.join("build", "lib64", "*.a")):
                self.spawn(["mkdir", "-p", os.path.join("build", "lib")])
@@ -108,7 +124,8 @@ class build_ext_with_cmake(build_ext):
                   self.spawn(["cp", arlib, re.sub(r"_static\.a$", ".a", arlib)])
                else:
                   self.spawn(["cp", arlib, re.sub(r"\.a$", "_static.a", arlib)])
-            self.spawn(["rm", "-rf", ext.name, f"build.{ext.name}"])
+            self.spawn(["rm", "-rf", ext.name])
+            self.spawn(["rm", "-rf", f"build.{ext.name}"])
         os.chdir(cwd)
         self.spawn(["ls", "-l", "-R", "build"])
         print("build target architecture is", sysconfig.get_platform())
@@ -158,9 +175,8 @@ with open("README.md", "r") as fh:
 if "win" in sysconfig.get_platform():
     extension_include_dirs = ["hddm_r",
                               "build\\include",
-                              "build\\include\\xrootd",
                              ]
-    extension_library_dirs = ["build\\lib",]
+    extension_library_dirs = ["build\\lib"]
     extension_libraries = ["libhdf5_hl",
                            "libhdf5",
                            "xstream",
@@ -169,7 +185,18 @@ if "win" in sysconfig.get_platform():
                            "xerces-c_3",
                            "libpthreadVC3",
                            "ws2_32",
+                           "httpstream",
+                           "cpr",
+                           "libcurl",
+                           "libssl",
+                           "libcrypto",
+                           "Advapi32",
+                           "Crypt32",
                           ]
+    extension_compile_args = ["-std:c++17",
+                              "-DHDF5_SUPPORT",
+                              "-DISTREAM_OVER_HTTP",
+                             ]
 else:
     extension_include_dirs = ["hddm_r",
                               "build/include",
@@ -196,9 +223,17 @@ else:
                            "uuid_static",
                            "xml2_static",
                           ]
+    extension_compile_args = ["-std=c++17",
+                              "-DHDF5_SUPPORT",
+                              "-DISTREAM_OVER_HTTP",
+                              "-DISTREAM_OVER_XROOTD"
+                             ]
+if "macos" in sysconfig.get_platform():
+    extension_compile_args += ["-mmacosx-version-min=10.15"]
+
 setuptools.setup(
     name = "hddm_r",
-    version = "2.0.18",
+    version = "2.0.19",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
@@ -230,11 +265,7 @@ setuptools.setup(
            include_dirs = extension_include_dirs,
            library_dirs = extension_library_dirs,
            libraries = extension_libraries,
-           extra_compile_args = ["-std=c++17",
-                                 "-DHDF5_SUPPORT",
-                                 "-DISTREAM_OVER_HTTP",
-                                 "-DISTREAM_OVER_XROOTD"
-                                ],
+           extra_compile_args = extension_compile_args,
            sources = ["hddm_r/hddm_r++.cpp", "hddm_r/pyhddm_r.cpp"]),
     ],
     cmdclass = {
