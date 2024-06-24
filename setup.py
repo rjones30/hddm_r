@@ -233,7 +233,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "hddm_r",
-    version = "2.0.19",
+    version = "2.0.20",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
