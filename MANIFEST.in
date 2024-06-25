@@ -1,2 +1,2 @@
-include hddm_r/*.xml
+include gluex/hddm_r/*.xml
 include scripts/*.bat
