@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import glob
 import shutil
 import sysconfig
@@ -30,7 +31,7 @@ sources = {
   "cpr.url": "https://github.com/rjones30/cpr.git",
   "cpr.tag": "",
   "xrootd.url": "https://github.com/rjones30/xrootd.git",
-  "xrootd.tag": "",
+  "xrootd.tag": "stable-5.6-for-hddm",
   "HDDM.url": "https://github.com/rjones30/HDDM.git",
   "HDDM.tag": "streaming_input",
 }
@@ -82,10 +83,13 @@ class build_ext_with_cmake(build_ext):
             self.spawn(["scripts/install_cmake.bat"])
             cmake = ["cmake.exe"]
         if "xrootd" in ext.name:
-            # Needed by xrootd installation scripts
-            self.spawn(["curl", "https://bootstrap.pypa.io/pip/3.6/get-pip.py",
-                                "-o", "get-pip.py"])
-            self.spawn(["python", "get-pip.py"])
+            # pip module needed by xrootd cmake --install
+            pyversion = f"python{sys.version_info[0]}.{sys.version_info[1]}"
+            modpath = re.sub("/bin/python.*",
+                             "/lib/" + pyversion + "/site-packages",
+                             sys.executable)
+            sys.path.append(modpath)
+            os.environ['PYTHONPATH'] = modpath
             self.spawn(["python", "-m", "pip", "-V"])
 
         build_temp = f"build.{ext.name}"
@@ -240,7 +244,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.0.3",
+    version = "2.0.4",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
