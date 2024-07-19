@@ -196,6 +196,7 @@ class install_ext_solibs(install_lib):
                   if len(solibs) > 0:
                      self.spawn(["tar", "-cf", tarball2, "-C", solibdir] + solibs)
                      self.spawn(["tar", "-xf", tarball2, "-C", f"{wheel}/gluex/pyxrootd"])
+                     self.spawn(["tar", "-xf", tarball2, "-C", f"{wheel}/gluex/hddm_r"])
                self.spawn(["ls", "-lR", f"{wheel}/gluex"])
  
 
@@ -263,7 +264,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.5",
+    version = "2.1.6",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
