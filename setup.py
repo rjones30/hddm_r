@@ -172,6 +172,23 @@ class build_ext_with_cmake(build_ext):
                     modname = module.split('.')[-1]
                     self.spawn(["cp", f"py{modname}.cpy", f"py{modname}.cpp"])
                     os.chdir(cwd)
+            print(f"install_ext_solibs in gluex tree:")
+            for mext in glob.glob("build/lib*/python*/site-packages"):
+               self.spawn(["ls", "-lR", mext])
+               print(f"copying site-packages into gluex...")
+               tarball = "build/site_packages.tar"
+               self.spawn(["tar", "-cf", tarball, "-C", mext, "."])
+               self.spawn(["tar", "-xf", tarball, "-C", f"gluex"])
+               for solibdir in glob.glob("build/lib*"):
+                  cwd = os.getcwd()
+                  os.chdir(solibdir)
+                  solibs = glob.glob("*.so*")
+                  solibs += glob.glob("*.dylib*")
+                  os.chdir(cwd)
+                  if len(solibs) > 0:
+                     self.spawn(["tar", "-cf", tarball, "-C", solibdir] + solibs)
+                     self.spawn(["tar", "-xf", tarball, "-C", f"gluex/pyxrootd"])
+               self.spawn(["ls", "-lR", "gluex"])
 
 
 class install_ext_solibs(install_lib):
@@ -183,23 +200,6 @@ class install_ext_solibs(install_lib):
                 for mext in re.finditer("^([^/]*).cpython.*", solib):
                     if not mext.group(1) in templates:
                         self.spawn(["rm", "-f", f"{wheel}/{solib}"])
-            print(f"install_ext_solibs in wheel {wheel}:")
-            for mext in glob.glob("build/lib*/python*/site-packages"):
-               self.spawn(["ls", "-lR", mext])
-               print(f"install_ext_solibs copying site-packages into gluex...")
-               tarball = "build/site_packages.tar"
-               self.spawn(["tar", "-cf", tarball, "-C", mext, "."])
-               self.spawn(["tar", "-xf", tarball, "-C", f"{wheel}/gluex"])
-               for solibdir in glob.glob("build/lib*"):
-                  cwd = os.getcwd()
-                  os.chdir(solibdir)
-                  solibs = glob.glob("*.so*")
-                  solibs += glob.glob("*.dylib*")
-                  os.chdir(cwd)
-                  if len(solibs) > 0:
-                     self.spawn(["tar", "-cf", tarball, "-C", solibdir] + solibs)
-                     self.spawn(["tar", "-xf", tarball, "-C", f"{wheel}/gluex/pyxrootd"])
-               self.spawn(["ls", "-lR", f"{wheel}/gluex"])
  
 
 with open("README.md", "r") as fh:
@@ -266,7 +266,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.7",
+    version = "2.1.8",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
