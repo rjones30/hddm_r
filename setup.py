@@ -10,6 +10,10 @@ from setuptools.command.build_ext import build_ext as build_ext
 from setuptools.command.install_lib import install_lib as install_lib
 
 templates = {
+  "gluex.hddm_r": ["gluex/hddm_r/rest.xml"]
+}
+
+package_data = {
   "gluex.hddm_r": ["gluex/hddm_r/rest.xml",
                    "gluex/XRootD/client/*",
                    "gluex/pyxrootd/*",
@@ -172,6 +176,17 @@ class build_ext_with_cmake(build_ext):
                     modname = module.split('.')[-1]
                     self.spawn(["cp", f"py{modname}.cpy", f"py{modname}.cpp"])
                     os.chdir(cwd)
+
+
+class install_ext_solibs(install_lib):
+
+    def run(self):
+        super().run()
+        for wheel in glob.glob("build/bdist.*/wheel"):
+            for solib in os.listdir(wheel):
+                for mext in re.finditer("^([^/]*).cpython.*", solib):
+                    if not mext.group(1) in templates:
+                        self.spawn(["rm", "-f", f"{wheel}/{solib}"])
             print(f"install_ext_solibs in gluex tree:")
             for mext in glob.glob("build/lib*/python*/site-packages"):
                self.spawn(["ls", "-lR", mext])
@@ -189,17 +204,6 @@ class build_ext_with_cmake(build_ext):
                      self.spawn(["tar", "-cf", tarball, "-C", solibdir] + solibs)
                      self.spawn(["tar", "-xf", tarball, "-C", f"gluex/pyxrootd"])
                self.spawn(["ls", "-lR", "gluex"])
-
-
-class install_ext_solibs(install_lib):
-
-    def run(self):
-        super().run()
-        for wheel in glob.glob("build/bdist.*/wheel"):
-            for solib in os.listdir(wheel):
-                for mext in re.finditer("^([^/]*).cpython.*", solib):
-                    if not mext.group(1) in templates:
-                        self.spawn(["rm", "-f", f"{wheel}/{solib}"])
  
 
 with open("README.md", "r") as fh:
@@ -266,7 +270,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.8",
+    version = "2.1.9",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
@@ -274,7 +278,7 @@ setuptools.setup(
     long_description_content_type = "text/markdown",
     packages = templates.keys(),
     namespace_packages=['gluex'],
-    package_data = templates,
+    package_data = package_data,
     classifiers = [
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
