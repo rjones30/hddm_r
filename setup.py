@@ -14,10 +14,10 @@ templates = {
 }
 
 package_data = {
-  "gluex.hddm_r": ["gluex/hddm_r/rest.xml",
-                   "gluex/XRootD/client/*",
-                   "gluex/pyxrootd/*",
-                   "gluex/xrootd*",
+  "gluex.hddm_r": ["rest.xml",
+                   "XRootD/client/*",
+                   "pyxrootd/*",
+                   "xrootd*",
                   ]
 }
 
@@ -193,7 +193,7 @@ class install_ext_solibs(install_lib):
                print(f"copying site-packages into gluex...")
                tarball = "build/site_packages.tar"
                self.spawn(["tar", "-cf", tarball, "-C", mext, "."])
-               self.spawn(["tar", "-xf", tarball, "-C", f"gluex"])
+               self.spawn(["tar", "-xf", tarball, "-C", f"gluex/hddm_r"])
                for solibdir in glob.glob("build/lib*"):
                   cwd = os.getcwd()
                   os.chdir(solibdir)
@@ -202,7 +202,7 @@ class install_ext_solibs(install_lib):
                   os.chdir(cwd)
                   if len(solibs) > 0:
                      self.spawn(["tar", "-cf", tarball, "-C", solibdir] + solibs)
-                     self.spawn(["tar", "-xf", tarball, "-C", f"gluex/pyxrootd"])
+                     self.spawn(["tar", "-xf", tarball, "-C", f"gluex/hddm_r/pyxrootd"])
                self.spawn(["ls", "-lR", "gluex"])
  
 
@@ -270,7 +270,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.9",
+    version = "2.1.10",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
