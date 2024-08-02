@@ -197,9 +197,9 @@ class install_ext_solibs(install_lib):
             # Now copy over bits of the xrootd build that we want
             # to include in this wheel to provide the xrootd client.
             for mext in glob.glob("build/lib*/python*/site-packages"):
-                print(f"copying site-packages into {wheel}/gluex/hddm_s:")
-                self.spawn(["mkdir", "-p", f"{wheel}/gluex/hddm_s"])
-                tarball = f"{wheel}/gluex/hddm_s/site_packages.tar.gz"
+                print(f"copying site-packages into {wheel}/gluex/hddm_r:")
+                self.spawn(["mkdir", "-p", f"{wheel}/gluex/hddm_r"])
+                tarball = f"{wheel}/gluex/hddm_r/site_packages.tar.gz"
                 self.spawn(["tar", "-zcf", tarball, "-C", mext, "."])
             for solibdir in glob.glob("build/lib*"):
                 cwd = os.getcwd()
@@ -209,7 +209,7 @@ class install_ext_solibs(install_lib):
                 os.chdir(cwd)
                 print(f"from {solibdir} copied {solibs}:")
                 if len(solibs) > 0:
-                    tarball = f"{wheel}/gluex/hddm_s/sharedlibs.tar.gz"
+                    tarball = f"{wheel}/gluex/hddm_r/sharedlibs.tar.gz"
                     self.spawn(["tar", "-zcf", tarball, "-C", solibdir] + solibs)
  
 
@@ -307,7 +307,7 @@ setuptools.setup(
       CMakeExtension("cpr"),
       CMakeExtension("xrootd"),
       CMakeExtension("HDDM"),
-      setuptools.Extension("gluex.hddm_s",
+      setuptools.Extension("gluex.hddm_r",
            include_dirs = extension_include_dirs,
            library_dirs = extension_library_dirs,
            libraries = extension_libraries,
