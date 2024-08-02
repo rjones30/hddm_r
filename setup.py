@@ -146,6 +146,14 @@ class build_ext_with_cmake(build_ext):
         self.spawn(["ls", "-l", "-R", "build"])
         print("build target architecture is", sysconfig.get_platform())
         if ext.name == "HDDM": # finish construction of the hddm module
+            try:
+                print(f"LD_LIBRARY_PATH is {os.environ['LD_LIBRARY_PATH']}")
+            except:
+                print("LD_LIBRARY_PATH is undefined")
+            try:
+                print(f"DYLD_LIBRARY_PATH is {os.environ['DYLD_LIBRARY_PATH']}")
+            except:
+                print("DYLD_LIBRARY_PATH is undefined")
             if "win" in sysconfig.get_platform():
                 if "PATH" in os.environ:
                     os.environ["PATH"] += f";{cwd}/build/bin"
@@ -190,10 +198,8 @@ class install_ext_solibs(install_lib):
             # to include in this wheel to provide the xrootd client.
             for mext in glob.glob("build/lib*/python*/site-packages"):
                 print(f"copying site-packages into gluex:")
-                tarball = "build/site_packages.tar"
-                self.spawn(["tar", "-cf", tarball, "-C", mext, "."])
-                self.spawn(["tar", "-tf", tarball])
-                self.spawn(["tar", "-xf", tarball, "-C", f"{wheel}/gluex/hddm_s"])
+                tarball = f"{wheel}/gluex/hddm_s/site_packages.tar.gz"
+                self.spawn(["tar", "-zcf", tarball, "-C", mext, "."])
             for solibdir in glob.glob("build/lib*"):
                 cwd = os.getcwd()
                 os.chdir(solibdir)
@@ -202,9 +208,8 @@ class install_ext_solibs(install_lib):
                 os.chdir(cwd)
                 print(f"from {solibdir} copied {solibs}:")
                 if len(solibs) > 0:
-                    self.spawn(["tar", "-cf", tarball, "-C", solibdir] + solibs)
-                    self.spawn(["tar", "-tf", tarball])
-                    self.spawn(["tar", "-xf", tarball, "-C", f"{wheel}/gluex/hddm_s/pyxrootd"])
+                    tarball = f"{wheel}/gluex/hddm_s/sharedlibs.tar.gz"
+                    self.spawn(["tar", "-zcf", tarball, "-C", solibdir] + solibs)
  
 
 with open("README.md", "r") as fh:
@@ -279,7 +284,11 @@ setuptools.setup(
     long_description_content_type = "text/markdown",
     packages = templates.keys(),
     namespace_packages=['gluex'],
-    package_data = templates,
+    package_data = ["gluex.hddm_r": ["rest.xml",
+                                     "site_packages.tar.gz",
+                                     "sharedlibs.tar.gz",
+                                    ],
+    ],
     classifiers = [
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
