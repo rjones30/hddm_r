@@ -41,7 +41,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.17.0
         env:
           CIBW_BUILD: "cp36-*"
-          CIBW_SKIP: "*_i686"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
             cp {wheel} {dest_dir}
@@ -76,7 +75,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.17.0
         env:
           CIBW_BUILD: "cp37-*"
-          CIBW_SKIP: "*_i686"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
             cp {wheel} {dest_dir}
@@ -110,8 +108,7 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.17.0
         env:
-          CIBW_BUILD: "cp38-"
-          CIBW_SKIP: "*_i686"
+          CIBW_BUILD: "cp38-*"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
             cp {wheel} {dest_dir}
@@ -146,7 +143,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.17.0
         env:
           CIBW_BUILD: "cp39-*"
-          CIBW_SKIP: "*_i686"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
             cp {wheel} {dest_dir}
@@ -181,7 +177,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.17.0
         env:
           CIBW_BUILD: "cp310-*"
-          CIBW_SKIP: "*_i686"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
             cp {wheel} {dest_dir}
@@ -216,7 +211,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.17.0
         env:
           CIBW_BUILD: "cp311-*"
-          CIBW_SKIP: "*_i686"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
             cp {wheel} {dest_dir}
@@ -251,7 +245,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.17.0
         env:
           CIBW_BUILD: "cp312-*"
-          CIBW_SKIP: "*_i686"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             echo Simplified repair, just a simple copy from {wheel} into {dest_dir}&&
             cp {wheel} {dest_dir}
@@ -287,7 +280,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.17.0
         env:
           CIBW_BUILD: "pp37-*"
-          CIBW_SKIP: "*_i686"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             echo Simplified repair, just a simple copy from {wheel} into {dest_dir}&&
             cp {wheel} {dest_dir}
@@ -323,7 +315,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.17.0
         env:
           CIBW_BUILD: "pp38-*"
-          CIBW_SKIP: "*_i686"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             echo Simplified repair, just a simple copy from {wheel} into {dest_dir}&&
             cp {wheel} {dest_dir}
@@ -359,7 +350,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.17.0
         env:
           CIBW_BUILD: "pp39-*"
-          CIBW_SKIP: "*_i686"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             echo Simplified repair, just a simple copy from {wheel} into {dest_dir}&&
             cp {wheel} {dest_dir}
@@ -395,7 +385,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.17.0
         env:
           CIBW_BUILD: "pp310-*"
-          CIBW_SKIP: "*_i686"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             echo Simplified repair, just a simple copy from {wheel} into {dest_dir}&&
             cp {wheel} {dest_dir}
