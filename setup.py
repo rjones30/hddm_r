@@ -50,7 +50,9 @@ class build_ext_with_cmake(build_ext):
             self.build_with_cmake(ext)
             if ext.name in templates:
                 build_extension_solibs.append(ext)
+        print("entry to my run with extensions", self.extensions)
         self.extensions = build_extension_solibs
+        print("descending into build_ext.run with extensions", self.extensions)
         super().run()
 
     def build_with_cmake(self, ext):
