@@ -257,7 +257,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.24",
+    version = "2.1.25",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
@@ -291,7 +291,8 @@ setuptools.setup(
            library_dirs = extension_library_dirs,
            libraries = extension_libraries,
            extra_compile_args = extension_compile_args,
-           sources = [],
+           sources = ["gluex/hddm_r/hddm_r++.cpp",
+                      "gluex/hddm_r/pyhddm_r.cpp"]
       ),
     ],
     cmdclass = {
