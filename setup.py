@@ -179,11 +179,16 @@ class build_ext_with_cmake(build_ext):
 class install_ext_solibs(install_lib):
 
     def run(self):
+        # Include my shared libraries in the bdist wheel by copying what I need
+        # into build/lib.<platform> and then letting install_lib.run() do the rest.
+        # This is not documented anywhere, so it might break in some future release
+        # of setuptools. The package_data and data_file arguments are useless for
+        # files that are not already there prior to the beginning of the build.
         cwd = os.getcwd()
         os.chdir("build")
         moduledir = glob.glob("lib.*")[0] + "/gluex/hddm_r"
         tarball = f"{moduledir}/sharedlibs.tar.gz"
-        self.spawn(["tar", "-zcf", tarball] + glob.glob("lib[!.]*"))
+        self.spawn(["tar", "-zcf", tarball] + glob.glob("lib[!.]*") + glob.glob("lib/python*")
         os.chdir(cwd)
         super().run()
  
@@ -252,7 +257,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.23",
+    version = "2.1.24",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
