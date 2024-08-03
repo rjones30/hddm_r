@@ -188,7 +188,7 @@ class install_ext_solibs(install_lib):
         os.chdir("build")
         moduledir = glob.glob("lib.*")[0] + "/gluex/hddm_r"
         tarball = f"{moduledir}/sharedlibs.tar.gz"
-        self.spawn(["tar", "-zcf", tarball] + glob.glob("lib[!.]*") + glob.glob("lib/python*")
+        self.spawn(["tar", "-zcf", tarball] + glob.glob("lib[!.]*") + glob.glob("lib/python*"))
         os.chdir(cwd)
         super().run()
  
