@@ -147,14 +147,6 @@ class build_ext_with_cmake(build_ext):
         self.spawn(["ls", "-l", "-R", "build"])
         print("build target architecture is", sysconfig.get_platform())
         if ext.name == "HDDM": # finish construction of the hddm module
-            try:
-                print(f"LD_LIBRARY_PATH is {os.environ['LD_LIBRARY_PATH']}")
-            except:
-                print("LD_LIBRARY_PATH is undefined")
-            try:
-                print(f"DYLD_LIBRARY_PATH is {os.environ['DYLD_LIBRARY_PATH']}")
-            except:
-                print("DYLD_LIBRARY_PATH is undefined")
             if "win" in sysconfig.get_platform():
                 if "PATH" in os.environ:
                     os.environ["PATH"] += f";{cwd}/build/bin"
@@ -189,12 +181,11 @@ class install_ext_solibs(install_lib):
     def run(self):
         cwd = os.getcwd()
         os.chdir("build")
-        tarball = glob.glob("lib.*")[0] + "/gluex/hddm_r/sharedlibs.tar.gz"
-        self.spawn(["tar", "-zcf", tarball] + glob.glob("lib[^.]*"))
+        moduledir = glob.glob("lib.*")[0] + "/gluex/hddm_r"
+        tarball = f"{moduledir}/sharedlibs.tar.gz"
+        self.spawn(["tar", "-zcf", tarball, "lib"] + glob.glob("lib[!.]*"))
+        self.spawn(["tar", "-zxf", tarball, "-C", moduledir])
         os.chdir(cwd)
-        print("my exclusions are", self.get_exclusions())
-        print("my cwd is", cwd)
-        self.spawn(["ls", "-lR"])
         super().run()
  
 
@@ -262,7 +253,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.22",
+    version = "2.1.23",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
