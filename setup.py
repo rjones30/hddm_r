@@ -189,7 +189,7 @@ class install_ext_solibs(install_lib):
         tarball = f"gluex/hddm_r/sharedlibs.tar.gz"
         cwd = os.getcwd()
         os.chdir("build")
-        self.spawn(["tar", "-zcf", tarball, glob.glob("lib*")])
+        self.spawn(["tar", "-zcf", tarball, ' '.join(glob.glob("lib*"))])
         os.chdir(cwd)
         super().run()
  
