@@ -50,9 +50,7 @@ class build_ext_with_cmake(build_ext):
             self.build_with_cmake(ext)
             if ext.name in templates:
                 build_extension_solibs.append(ext)
-        print("entry to my run with extensions", self.extensions)
         self.extensions = build_extension_solibs
-        print("descending into build_ext.run with extensions", self.extensions)
         self.force = True
         super().run()
 
@@ -261,7 +259,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.20",
+    version = "2.1.21",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
@@ -269,8 +267,8 @@ setuptools.setup(
     long_description_content_type = "text/markdown",
     packages = templates.keys(),
     namespace_packages=['gluex'],
-    package_data = {"gluex.hddm_r": ["rest.xml",
-                                     "sharedlibs.tar.gz",
+    package_data = {"gluex.hddm_r": ["gluex/hddm_r/rest.xml",
+                                     "gluex/hddm_r/sharedlibs.tar.gz",
                                     ],
     },
     classifiers = [
