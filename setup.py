@@ -187,35 +187,20 @@ class install_ext_solibs(install_lib):
 
     def run(self):
         super().run()
-        for wheel in glob.glob("build/bdist.*/wheel"):
-            print("Remove any hddm_X modules that were built as part of" +
-                  " the HDDM install, but are not wanted in the wheel.")
-            for dirpath, dirnames, filenames in os.walk(wheel):
-                print("found directory", dirpath)
-                for solib in filenames:
-                    print("found file", solib)
-                    for mext in re.finditer("^([^/]*).cpython.*", solib):
-                        if not mext.group(1) in templates:
-                            self.spawn(["echo", "rm", "-f", f"{wheel}/{solib}"])
-                        else:
-                            print(f"preserving {wheel}/{solib}")
-            print("Now copy over bits of the xrootd build that we want" +
-                  " to include in this wheel to provide the xrootd client.")
-            for mext in glob.glob("build/lib*/python*/site-packages"):
-                print(f"copying site-packages into {wheel}/gluex/hddm_r:")
-                self.spawn(["mkdir", "-p", f"{wheel}/gluex/hddm_r"])
-                tarball = f"{wheel}/gluex/hddm_r/site_packages.tar.gz"
-                self.spawn(["tar", "-zcf", tarball, "-C", mext, "."])
-            for solibdir in glob.glob("build/lib*"):
-                cwd = os.getcwd()
-                os.chdir(solibdir)
-                solibs = glob.glob("*.so*")
-                solibs += glob.glob("*.dylib*")
-                os.chdir(cwd)
-                print(f"from {solibdir} copied {solibs}:")
-                if len(solibs) > 0:
-                    tarball = f"{wheel}/gluex/hddm_r/sharedlibs.tar.gz"
-                    self.spawn(["tar", "-zcf", tarball, "-C", solibdir] + solibs)
+        for mext in glob.glob("build/lib*/python*/site-packages"):
+            print(f"copying site-packages into gluex/hddm_r:")
+            tarball = f"gluex/hddm_r/site_packages.tar.gz"
+            self.spawn(["tar", "-zcf", tarball, "-C", mext, "."])
+        for solibdir in glob.glob("build/lib*"):
+            cwd = os.getcwd()
+            os.chdir(solibdir)
+            solibs = glob.glob("*.so*")
+            solibs += glob.glob("*.dylib*")
+            os.chdir(cwd)
+            print(f"from {solibdir} copied {solibs}:")
+            if len(solibs) > 0:
+                tarball = f"gluex/hddm_r/sharedlibs.tar.gz"
+                self.spawn(["tar", "-zcf", tarball, "-C", solibdir] + solibs)
  
 
 with open("README.md", "r") as fh:
@@ -282,7 +267,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.15",
+    version = "2.1.16",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
