@@ -53,6 +53,7 @@ class build_ext_with_cmake(build_ext):
         print("entry to my run with extensions", self.extensions)
         self.extensions = build_extension_solibs
         print("descending into build_ext.run with extensions", self.extensions)
+        self.force = True
         super().run()
 
     def build_with_cmake(self, ext):
