@@ -186,20 +186,11 @@ class build_ext_with_cmake(build_ext):
 class install_ext_solibs(install_lib):
 
     def run(self):
-        for mext in glob.glob("build/lib*/python*/site-packages"):
-            print(f"copying site-packages into gluex/hddm_r:")
-            tarball = f"gluex/hddm_r/site_packages.tar.gz"
-            self.spawn(["tar", "-zcf", tarball, "-C", mext, "."])
-        for solibdir in glob.glob("build/lib*"):
-            cwd = os.getcwd()
-            os.chdir(solibdir)
-            solibs = glob.glob("*.so*")
-            solibs += glob.glob("*.dylib*")
-            os.chdir(cwd)
-            print(f"from {solibdir} copied {solibs}:")
-            if len(solibs) > 0:
-                tarball = f"gluex/hddm_r/sharedlibs.tar.gz"
-                self.spawn(["tar", "-zcf", tarball, "-C", solibdir] + solibs)
+        tarball = f"gluex/hddm_r/sharedlibs.tar.gz"
+        cwd = os.getcwd()
+        os.chdir("build")
+        self.spawn(["tar", "-zcf", tarball, glob.glob("lib*")])
+        os.chdir(cwd)
         super().run()
  
 
@@ -267,7 +258,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.19",
+    version = "2.1.20",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
@@ -276,7 +267,6 @@ setuptools.setup(
     packages = templates.keys(),
     namespace_packages=['gluex'],
     package_data = {"gluex.hddm_r": ["rest.xml",
-                                     "site_packages.tar.gz",
                                      "sharedlibs.tar.gz",
                                     ],
     },
