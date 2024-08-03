@@ -186,10 +186,10 @@ class build_ext_with_cmake(build_ext):
 class install_ext_solibs(install_lib):
 
     def run(self):
-        tarball = f"gluex/hddm_r/sharedlibs.tar.gz"
         cwd = os.getcwd()
+        tarball = f"{cwd}/gluex/hddm_r/sharedlibs.tar.gz"
         os.chdir("build")
-        self.spawn(["tar", "-zcf", tarball, ' '.join(glob.glob("lib*"))])
+        self.spawn(["tar", "-zcf", tarball] + glob.glob("lib*"))
         os.chdir(cwd)
         super().run()
  
