@@ -188,11 +188,10 @@ class install_ext_solibs(install_lib):
 
     def run(self):
         cwd = os.getcwd()
-        tarball = f"{cwd}/gluex/hddm_r/sharedlibs.tar.gz"
         os.chdir("build")
+        tarball = glob.glob("lib.*")[0] + "/gluex/hddm_r/sharedlibs.tar.gz"
         self.spawn(["tar", "-zcf", tarball] + glob.glob("lib[^.]*"))
         os.chdir(cwd)
-        self.spawn(["cp", tarball, glob.glob("build/lib.*/gluex/"])
         print("my exclusions are", self.get_exclusions())
         print("my cwd is", cwd)
         self.spawn(["ls", "-lR"])
