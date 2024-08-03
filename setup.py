@@ -192,6 +192,10 @@ class install_ext_solibs(install_lib):
         os.chdir("build")
         self.spawn(["tar", "-zcf", tarball] + glob.glob("lib*"))
         os.chdir(cwd)
+        self.spawn(["cp", tarbaall, "gluex/"])
+        print("my exclusions are", self.get_exclusions())
+        print("my cwd is", cwd)
+        self.spawn(["ls", "-lR"])
         super().run()
  
 
@@ -259,16 +263,16 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.21",
+    version = "2.1.22",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
     long_description = long_description,
     long_description_content_type = "text/markdown",
     packages = templates.keys(),
-    namespace_packages=['gluex'],
-    package_data = {"gluex.hddm_r": ["gluex/hddm_r/rest.xml",
-                                     "gluex/hddm_r/sharedlibs.tar.gz",
+    #namespace_packages=['gluex'],
+    package_data = {"gluex.hddm_r": ["rest.xml",
+                                     "sharedlibs.tar.gz",
                                     ],
     },
     classifiers = [
