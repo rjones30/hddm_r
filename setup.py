@@ -186,7 +186,6 @@ class build_ext_with_cmake(build_ext):
 class install_ext_solibs(install_lib):
 
     def run(self):
-        super().run()
         for mext in glob.glob("build/lib*/python*/site-packages"):
             print(f"copying site-packages into gluex/hddm_r:")
             tarball = f"gluex/hddm_r/site_packages.tar.gz"
@@ -201,6 +200,7 @@ class install_ext_solibs(install_lib):
             if len(solibs) > 0:
                 tarball = f"gluex/hddm_r/sharedlibs.tar.gz"
                 self.spawn(["tar", "-zcf", tarball, "-C", solibdir] + solibs)
+        super().run()
  
 
 with open("README.md", "r") as fh:
@@ -267,7 +267,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.16",
+    version = "2.1.17",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
