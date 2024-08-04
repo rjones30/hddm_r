@@ -188,7 +188,7 @@ class install_ext_solibs(install_lib):
         os.chdir("build")
         moduledir = glob.glob("lib.*")[0] + "/gluex"
         tarball = f"{moduledir}/hddm_r/sharedlibs.tar.gz"
-        self.spawn(["rm", "-rf", "lib/perl5"])
+        self.spawn(["rm", "-rf", "lib/perl5", "lib/python3"])
         self.spawn(["tar", "-zcf", tarball, "lib"] + glob.glob("lib[!.]*"))
         os.chdir(cwd)
         self.spawn(["cp", "-r", "gluex/xrootd_client", f"build/{moduledir}"])
@@ -259,7 +259,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.27",
+    version = "2.1.28",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
