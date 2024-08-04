@@ -51,7 +51,7 @@ class build_ext_with_cmake(build_ext):
             if ext.name in templates:
                 build_extension_solibs.append(ext)
         self.extensions = build_extension_solibs
-        self.force = True
+        #self.force = True
         super().run()
 
     def build_with_cmake(self, ext):
@@ -188,7 +188,8 @@ class install_ext_solibs(install_lib):
         os.chdir("build")
         moduledir = glob.glob("lib.*")[0] + "/gluex"
         tarball = f"{moduledir}/hddm_r/sharedlibs.tar.gz"
-        self.spawn(["tar", "-zcf", tarball] + glob.glob("lib[!.]*") + glob.glob("lib/python*"))
+        self.spawn(["rm", "-rf", "lib/perl5"])
+        self.spawn(["tar", "-zcf", tarball, "lib"] + glob.glob("lib[!.]*"))
         os.chdir(cwd)
         self.spawn(["cp", "-r", "gluex/xrootd_client", f"build/{moduledir}"])
         super().run()
@@ -258,7 +259,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.1.26",
+    version = "2.1.27",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
