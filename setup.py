@@ -31,7 +31,7 @@ sources = {
   "cpr.url": "https://github.com/rjones30/cpr.git",
   "cpr.tag": "",
   "xrootd.url": "https://github.com/rjones30/xrootd.git",
-  "xrootd.tag": "stable-5.6-for-hddm",
+  "xrootd.tag": "stable-5.7.1-for-hddm",
   "HDDM.url": "https://github.com/rjones30/HDDM.git",
   "HDDM.tag": "streaming_input",
 }
@@ -65,7 +65,10 @@ class build_ext_with_cmake(build_ext):
         if f"{ext.name}.url" in sources:
             if not os.path.isdir(ext.name):
                 self.spawn(["git", "clone", sources[ext.name + ".url"]])
-            os.chdir(ext.name)
+                os.chdir(ext.name)
+            else:
+                os.chdir(ext.name)
+                self.spawn(["git", "pull", sources[ext.name + ".url"]])
             tag = sources[ext.name + ".tag"]
             if tag:
                 self.spawn(["git", "checkout", tag])
@@ -259,7 +262,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.2.2",
+    version = "2.3.0",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
