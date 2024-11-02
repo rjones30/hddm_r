@@ -30,8 +30,10 @@ sources = {
   "libxml2.tag": "",
   "cpr.url": "https://github.com/rjones30/cpr.git",
   "cpr.tag": "",
-  "xrootd.url": "https://github.com/rjones30/xrootd.git",
-  "xrootd.tag": "stable-5.7.1-for-hddm",
+  #"xrootd.url": "https://github.com/rjones30/xrootd.git",
+  #"xrootd.tag": "stable-5.7.1-for-hddm",
+  "xrootd.url": "https://github.com/xrootd/xrootd.git",
+  "xrootd.tag": "v5.7.1",
   "HDDM.url": "https://github.com/rjones30/HDDM.git",
   "HDDM.tag": "streaming_input",
 }
@@ -104,7 +106,6 @@ class build_ext_with_cmake(build_ext):
           f"-DCMAKE_INSTALL_PREFIX={os.path.abspath(cwd)}/build",
           f"-DEXTRA_INCLUDE_DIRS={os.path.abspath(cwd)}/build/include",
           f"-DCMAKE_BUILD_TYPE={cmake_config}",
-          f"-DBUILD_SHARED_LIBS:BOOL=off",
           f"-DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=on",
           f"-DCMAKE_OSX_DEPLOYMENT_TARGET=10.15",
           f"-DCMAKE_VERBOSE_MAKEFILE:BOOL=on",
@@ -117,11 +118,15 @@ class build_ext_with_cmake(build_ext):
         if "xrootd" in ext.name:
             cmake_args += [f"-DXRDCL_LIB_ONLY:bool=on"]
             cmake_args += [f"-DOPENSSL_INCLUDE_DIR:path={os.path.abspath(cwd)}/build/include"]
+            cmake_args += [f"-DCMAKE_CXX_FLAGS='-D_GLIBCXX_USE_CXX11_ABI=1 -Wabi-tag'"]
+        else:
+            cmake_args += [f"-DBUILD_SHARED_LIBS:BOOL=off"]
         if "hdf5" in ext.name:
             cmake_args += [f"-DHDF5_SRC_INCLUDE_DIRS={os.path.abspath(cwd)}/build/include"]
         if "HDDM" in ext.name:
             cmake_args += [f"-DHDF5_ROOT:PATH={os.path.abspath(cwd)}/build"]
         self.spawn(cmake + [f"../{ext.name}"] + cmake_args)
+        self.spawn(["cat", "CMakeCache.txt"])
         if "xerces" in ext.name and sysconfig.get_platform != "win32":
             for inc in glob.glob(os.path.join(cwd, "build", "include", "uuid", "uuid.h")):
                 self.spawn(echo + mv + [inc, inc + "idden"])
@@ -196,6 +201,9 @@ class install_ext_solibs(install_lib):
         os.chdir(cwd)
         self.spawn(["cp", "-r", "gluex/xrootd_client", f"build/{moduledir}"])
         super().run()
+        return
+        raise Exception("Now at the end of install_ext_solibs,",
+                        "time to throw an exception and bomb out")
  
 
 with open("README.md", "r") as fh:
@@ -232,7 +240,7 @@ else:
                               "build/include/libxml2",
                               "build/include/xrootd",
                              ]
-    extension_library_dirs = ["build/lib"]
+    extension_library_dirs = ["build/lib", "build/lib64"]
     extension_libraries = ["hdf5_hl_static",
                            "hdf5_static",
                            "xstream",
@@ -246,9 +254,12 @@ else:
                            "ssl_static",
                            "crypto_static",
                            "xrootdstream",
-                           "XrdCl_static",
-                           "XrdUtils_static",
-                           "XrdXml_static",
+                           #"XrdCl_static",
+                           #"XrdUtils_static",
+                           #"XrdXml_static",
+                           "XrdCl",
+                           "XrdUtils",
+                           "XrdXml",
                            "uuid_static",
                            "xml2_static",
                           ]
@@ -262,7 +273,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.3.0",
+    version = "2.3.3",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",

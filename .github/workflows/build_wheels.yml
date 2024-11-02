@@ -42,9 +42,15 @@ jobs:
         env:
           CIBW_BUILD: "cp36-*"
           CIBW_SKIP: "*_i686"
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX_IGNORED: >
-            echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
-            cp {wheel} {dest_dir}
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+          CIBW_MUSLLINUX_X86_64_IMAGE: "musllinux_1_1"
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build/lib64 &&
+            auditwheel show {wheel} &&
+            auditwheel repair -w {dest_dir} {wheel}
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            export LIBRARY_PATH=$(pwd)/build/lib &&
+            DYLD_LIBRARY_PATH=$LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
         with:
           package-dir: .
           output-dir: wheelhouse
@@ -77,9 +83,15 @@ jobs:
         env:
           CIBW_BUILD: "cp37-*"
           CIBW_SKIP: "*_i686"
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX_IGNORED: >
-            echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
-            cp {wheel} {dest_dir}
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+          CIBW_MUSLLINUX_X86_64_IMAGE: "musllinux_1_1"
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build/lib64 &&
+            auditwheel show {wheel} &&
+            auditwheel repair -w {dest_dir} {wheel}
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            export LIBRARY_PATH=$(pwd)/build/lib &&
+            DYLD_LIBRARY_PATH=$LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
         with:
           package-dir: .
           output-dir: wheelhouse
@@ -112,9 +124,15 @@ jobs:
         env:
           CIBW_BUILD: "cp38-*"
           CIBW_SKIP: "*_i686"
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX_IGNORED: >
-            echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
-            cp {wheel} {dest_dir}
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+          CIBW_MUSLLINUX_X86_64_IMAGE: "musllinux_1_1"
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build/lib64 &&
+            auditwheel show {wheel} &&
+            auditwheel repair -w {dest_dir} {wheel}
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            export LIBRARY_PATH=$(pwd)/build/lib &&
+            DYLD_LIBRARY_PATH=$LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
         with:
           package-dir: .
           output-dir: wheelhouse
@@ -147,9 +165,15 @@ jobs:
         env:
           CIBW_BUILD: "cp39-*"
           CIBW_SKIP: "*_i686"
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX_IGNORED: >
-            echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
-            cp {wheel} {dest_dir}
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+          CIBW_MUSLLINUX_X86_64_IMAGE: "musllinux_1_1"
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build/lib64 &&
+            auditwheel show {wheel} &&
+            auditwheel repair -w {dest_dir} {wheel}
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            export LIBRARY_PATH=$(pwd)/build/lib &&
+            DYLD_LIBRARY_PATH=$LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
         with:
           package-dir: .
           output-dir: wheelhouse
@@ -182,9 +206,15 @@ jobs:
         env:
           CIBW_BUILD: "cp310-*"
           CIBW_SKIP: "*_i686"
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX_IGNORED: >
-            echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
-            cp {wheel} {dest_dir}
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+          CIBW_MUSLLINUX_X86_64_IMAGE: "musllinux_1_1"
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build/lib64 &&
+            auditwheel show {wheel} &&
+            auditwheel repair -w {dest_dir} {wheel}
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            export LIBRARY_PATH=$(pwd)/build/lib &&
+            DYLD_LIBRARY_PATH=$LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
         with:
           package-dir: .
           output-dir: wheelhouse
@@ -217,9 +247,15 @@ jobs:
         env:
           CIBW_BUILD: "cp311-*"
           CIBW_SKIP: "*_i686"
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX_IGNORED: >
-            echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
-            cp {wheel} {dest_dir}
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+          CIBW_MUSLLINUX_X86_64_IMAGE: "musllinux_1_1"
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build/lib64 &&
+            auditwheel show {wheel} &&
+            auditwheel repair -w {dest_dir} {wheel}
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            export LIBRARY_PATH=$(pwd)/build/lib &&
+            DYLD_LIBRARY_PATH=$LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
         with:
           package-dir: .
           output-dir: wheelhouse
@@ -252,10 +288,15 @@ jobs:
         env:
           CIBW_BUILD: "cp312-*"
           CIBW_SKIP: "*_i686"
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX_IGNORED: >
-            echo Simplified repair, just a simple copy from {wheel} into {dest_dir}&&
-            cp {wheel} {dest_dir}
-
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+          CIBW_MUSLLINUX_X86_64_IMAGE: "musllinux_1_1"
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build/lib64 &&
+            auditwheel show {wheel} &&
+            auditwheel repair -w {dest_dir} {wheel}
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            export LIBRARY_PATH=$(pwd)/build/lib &&
+            DYLD_LIBRARY_PATH=$LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
         with:
           package-dir: .
           output-dir: wheelhouse
@@ -292,10 +333,14 @@ jobs:
 #        env:
 #          CIBW_BUILD: "pp37-*"
 #          CIBW_SKIP: "*_i686"
-#          CIBW_REPAIR_WHEEL_COMMAND_LINUX_IGNORED: >
+#          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+#          CIBW_MUSLLINUX_X86_64_IMAGE: "musllinux_1_1"
+#          CIBW_REPAIR_WHEEL_COMMAND_LINUX_DISABLED_BY_RTJ: >
 #            echo Simplified repair, just a simple copy from {wheel} into {dest_dir}&&
 #            cp {wheel} {dest_dir}
-#
+#          CIBW_REPAIR_WHEEL_COMMAND_MACOS_DISABLED_BY_RTJ: >
+#            echo Simplified repair, just a simple copy from {wheel} into {dest_dir} &&
+#            cp {wheel} {dest_dir}
 #        with:
 #          package-dir: .
 #          output-dir: wheelhouse
@@ -329,10 +374,15 @@ jobs:
         env:
           CIBW_BUILD: "pp38-*"
           CIBW_SKIP: "*_i686"
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX_IGNORED: >
-            echo Simplified repair, just a simple copy from {wheel} into {dest_dir}&&
-            cp {wheel} {dest_dir}
-
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+          CIBW_MUSLLINUX_X86_64_IMAGE: "musllinux_1_1"
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build/lib64 &&
+            auditwheel show {wheel} &&
+            auditwheel repair -w {dest_dir} {wheel}
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            export LIBRARY_PATH=$(pwd)/build/lib &&
+            DYLD_LIBRARY_PATH=$LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
         with:
           package-dir: .
           output-dir: wheelhouse
@@ -366,10 +416,15 @@ jobs:
         env:
           CIBW_BUILD: "pp39-*"
           CIBW_SKIP: "*_i686"
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX_IGNORED: >
-            echo Simplified repair, just a simple copy from {wheel} into {dest_dir}&&
-            cp {wheel} {dest_dir}
-
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+          CIBW_MUSLLINUX_X86_64_IMAGE: "musllinux_1_1"
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build/lib64 &&
+            auditwheel show {wheel} &&
+            auditwheel repair -w {dest_dir} {wheel}
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            export LIBRARY_PATH=$(pwd)/build/lib &&
+            DYLD_LIBRARY_PATH=$LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
         with:
           package-dir: .
           output-dir: wheelhouse
@@ -403,10 +458,15 @@ jobs:
         env:
           CIBW_BUILD: "pp310-*"
           CIBW_SKIP: "*_i686"
-          CIBW_REPAIR_WHEEL_COMMAND_LINUX_IGNORED: >
-            echo Simplified repair, just a simple copy from {wheel} into {dest_dir}&&
-            cp {wheel} {dest_dir}
-
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
+          CIBW_MUSLLINUX_X86_64_IMAGE: "musllinux_1_1"
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/build/lib64 &&
+            auditwheel show {wheel} &&
+            auditwheel repair -w {dest_dir} {wheel}
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            export LIBRARY_PATH=$(pwd)/build/lib &&
+            DYLD_LIBRARY_PATH=$LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
         with:
           package-dir: .
           output-dir: wheelhouse
