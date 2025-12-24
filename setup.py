@@ -35,7 +35,7 @@ sources = {
   "xrootd.url": "https://github.com/xrootd/xrootd.git",
   "xrootd.tag": "v5.7.1",
   "HDDM.url": "https://github.com/rjones30/HDDM.git",
-  "HDDM.tag": "streaming_input",
+  "HDDM.tag": "main",
 }
 
 class CMakeExtension(setuptools.Extension):
@@ -125,12 +125,14 @@ class build_ext_with_cmake(build_ext):
             cmake_args += [f"-DHDF5_SRC_INCLUDE_DIRS={os.path.abspath(cwd)}/build/include"]
         if "HDDM" in ext.name:
             cmake_args += [f"-DHDF5_ROOT:PATH={os.path.abspath(cwd)}/build"]
+            if "win" in sysconfig.get_platform():
+                cmake_args += [f"-DENABLE_ISTREAM_OVER_XROOTD:BOOL=off"]
         self.spawn(cmake + [f"../{ext.name}"] + cmake_args)
         self.spawn(["cat", "CMakeCache.txt"])
         if "xerces" in ext.name and sysconfig.get_platform != "win32":
             for inc in glob.glob(os.path.join(cwd, "build", "include", "uuid", "uuid.h")):
-                self.spawn(echo + mv + [inc, inc + "idden"])
-                self.spawn(mv + [inc, inc + "idden"])
+                self.spawn(["echo", "mv", inc, inc + "idden"])
+                self.spawn(["mv", inc, inc + "idden"])
         if not self.dry_run:
             if "uuid" in ext.name or sysconfig.get_platform() == "win32":
                 self.spawn(cmake + ["--build", "."] + build_args)
@@ -230,7 +232,7 @@ if "win" in sysconfig.get_platform():
                            "Advapi32",
                            "Crypt32",
                           ]
-    extension_compile_args = ["-std:c++17",
+    extension_compile_args = ["-std:c++20",
                               "-DHDF5_SUPPORT",
                               "-DISTREAM_OVER_HTTP",
                              ]
@@ -263,7 +265,7 @@ else:
                            "uuid_static",
                            "xml2_static",
                           ]
-    extension_compile_args = ["-std=c++17",
+    extension_compile_args = ["-std=c++20",
                               "-DHDF5_SUPPORT",
                               "-DISTREAM_OVER_HTTP",
                               "-DISTREAM_OVER_XROOTD"
@@ -273,7 +275,7 @@ if "macos" in sysconfig.get_platform():
 
 setuptools.setup(
     name = "gluex.hddm_r",
-    version = "2.3.3",
+    version = "2.4.0",
     url = "https://github.com/rjones30/hddm_r",
     author = "Richard T. Jones",
     description = "i/o module for GlueX reconstructed events",
@@ -290,7 +292,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],                                      # Information to filter the project on PyPi website
-    python_requires = '>=3.6',              # Minimum version requirement of the package
+    python_requires = '>=3.8',              # Minimum version requirement of the package
     ext_modules = [
       CMakeExtension("zlib"),
       CMakeExtension("bzip2"),
