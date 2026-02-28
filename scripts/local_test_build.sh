@@ -28,8 +28,8 @@ source "$VENV_DIR/bin/activate"
 pip install --upgrade pip setuptools wheel
 
 # 3. Pre-flight check: dummy file creation
-echo "Checking if setup.py creates the dummy stub..."
-$PYTHON_EXE -c "import os; dummy='gluex/hddm_r/pyxrootd.so'; print(f'Exists: {os.path.exists(dummy)}')"
+#echo "Checking if setup.py creates the dummy stub..."
+#$PYTHON_EXE -c "import os; dummy='gluex/hddm_r/pyxrootd.so'; print(f'Exists: {os.path.exists(dummy)}')"
 
 # 4. Run the build
 # We use --verbose so we can see the 'spawn' commands and the 'Harvest' logs
@@ -47,19 +47,14 @@ if [ -z "$WHEEL_FILE" ]; then
 fi
 echo "Found Wheel: $WHEEL_FILE"
 
-# Check the 'Harvested' file size
-STUB_SIZE=$(stat -c%s "gluex/hddm_r/pyxrootd.so")
-if [ "$STUB_SIZE" -lt 100 ]; then
-    echo "ERROR: pyxrootd.so is still a dummy stub (Size: $STUB_SIZE bytes)."
-    exit 1
-else
-    echo "SUCCESS: pyxrootd.so has been harvested (Size: $STUB_SIZE bytes)."
-fi
+# Check for the xrootd client module directory and its compiled content instead
+ls -d gluex/hddm_r/pyxrootd/
+ls -l gluex/hddm_r/pyxrootd/client*.so
 
 # 6. Check Linkage
 # We expect to see XrdCl and XrdUtils in the 'needed' list
-echo "Checking pyxrootd.so internal linkage..."
-readelf -d gluex/hddm_r/pyxrootd.so | grep NEEDED
+echo "Checking clinet*.so internal linkage..."
+readelf -d gluex/hddm_r/pyxrootd/client*.so | grep NEEDED
 
 echo "Checking main hddm_r internal linkage..."
 # Find the compiled .so inside the build directory
