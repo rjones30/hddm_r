@@ -14,13 +14,12 @@ maintainers = [
 ]
 description = "methods for reading and writing GlueX reconstructed event data"
 readme = "README.md"
-license = {text = "MIT License"}
+license = "MIT"
 keywords = ["hddm", "GlueX", "Gluex", "gluex", "hdgeant4", "hdgeant"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Science/Research",
   "Topic :: Scientific/Engineering :: Physics",
-  "License :: OSI Approved :: MIT License",
   "Programming Language :: Python",
 ]
 
