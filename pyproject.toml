@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools >= 38.0", "wheel"]
+requires = ["setuptools >= 64.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "gluex.hddm_r"
-version = "2.5.2"
+version = "2.5.3"
 requires-python = ">= 3.8"
 authors = [
   {name = "Richard T. Jones", email = "richard.t.jones@uconn.edu"},
@@ -14,7 +14,7 @@ maintainers = [
 ]
 description = "methods for reading and writing GlueX reconstructed event data"
 readme = "README.md"
-license = "MIT"
+license = {text = "MIT"}
 keywords = ["hddm", "GlueX", "Gluex", "gluex", "hdgeant4", "hdgeant"]
 classifiers = [
   "Development Status :: 4 - Beta",
