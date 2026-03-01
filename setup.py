@@ -309,11 +309,13 @@ else:
 if "macos" in sysconfig.get_platform():
     extension_compile_args += ["-mmacosx-version-min=10.15"]
 
+ext_patterns = [f"*{s}" for s in importlib.machinery.EXTENSION_SUFFIXES]
+
 setuptools.setup(
     packages = list(templates.keys()) + ["gluex.hddm_r.pyxrootd"],
     #namespace_packages=['gluex'],
-    package_data = {"gluex.hddm_r": ["rest.xml",
-                                    ],
+    package_data = {"gluex.hddm_r": ["rest.xml"],
+                    "gluex.hddm_r.pyxrootd": ext_patterns,
     },
     ext_modules = [
       CMakeExtension("zlib"),
