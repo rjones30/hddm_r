@@ -148,6 +148,7 @@ class build_ext_with_cmake(build_ext):
             f"-DPython3_INCLUDE_DIR={sysconfig.get_path('include')}",
             f"-DPython3_EXECUTABLE={sys.executable}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
+            f"-DENABLE_PYTHON=ON",
         ]
         if "arm64" in sysconfig.get_platform():
             cmake_args += ["-DCMAKE_OSX_ARCHITECTURES=arm64"]
