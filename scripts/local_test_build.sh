@@ -47,19 +47,3 @@ if [ -z "$WHEEL_FILE" ]; then
 fi
 echo "Found Wheel: $WHEEL_FILE"
 
-# Check for the xrootd client module directory and its compiled content instead
-ls -d gluex/hddm_r/pyxrootd/
-ls -l gluex/hddm_r/pyxrootd/client*.so
-
-# 6. Check Linkage
-# We expect to see XrdCl and XrdUtils in the 'needed' list
-echo "Checking clinet*.so internal linkage..."
-readelf -d gluex/hddm_r/pyxrootd/client*.so | grep NEEDED
-
-echo "Checking main hddm_r internal linkage..."
-# Find the compiled .so inside the build directory
-MAIN_SO=$(find build/lib* -name "hddm_r*.so" | grep -v pyxrootd)
-readelf -d "$MAIN_SO" | grep NEEDED
-
-echo "=== Dry Run Complete ==="
-echo "If the 'NEEDED' lists above show libXrdCl, you are ready for GitHub Actions."
