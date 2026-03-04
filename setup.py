@@ -62,8 +62,11 @@ class build_ext_with_cmake(build_ext):
         cwd = os.getcwd()
         for ext in self.extensions:
             print(f"NOTICE: setup.py building extension library {ext.name}",
-                  f"for target platform {BUILD_TREE}")
-            for var in os.environ: print(f"{var}: {os.environ[var]}")
+                  f"for target platform {BUILD_TREE}",
+                  file=sys.stderr, flush=True)
+            for var in os.environ:
+                print(f"{var}: {os.environ[var]}",
+                      file=sys.stderr, flush=True)
             self.build_with_cmake(ext)
             if "xrootd" in ext.name:
                 if "win" in sysconfig.get_platform():
