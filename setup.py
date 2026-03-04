@@ -61,8 +61,8 @@ class build_ext_with_cmake(build_ext):
         build_extension_solibs = []
         cwd = os.getcwd()
         for ext in self.extensions:
-            print("NOTICE: setup.py building extension library {ext.name}",
-                  "for target platform {BUILD_TREE}")
+            print(f"NOTICE: setup.py building extension library {ext.name}",
+                  f"for target platform {BUILD_TREE}")
             for var in os.environ: print(f"{var}: {os.environ[var]}")
             self.build_with_cmake(ext)
             if "xrootd" in ext.name:
