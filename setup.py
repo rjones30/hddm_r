@@ -6,6 +6,7 @@ import shutil
 import sysconfig
 import stat
 import time
+import platform
 import importlib.machinery
 
 import setuptools
@@ -41,8 +42,12 @@ sources = {
   "HDDM.tag": "main",
 }
 
-cibw_build_id = os.environ.get("CIBW_BUILD_ID", "unknown")
-BUILD_TREE = os.path.join(os.getcwd(), f"build-{cibw_build_id}")
+if "pypy" in platform.python_implementation().lower():
+    python_impl = "pp"
+else:
+    python_impl = "cp"
+python_tag = f"{python_impl}{sys.version_info[0]}{sys.version_info[1]}-{platform.machine()}"
+BUILD_TREE = os.path.join(os.getcwd(), f"build-{python_tag}")
 
 def force_rm(func, path, _):
     """Platform-independent way to handle read-only files during rmtree."""
@@ -61,12 +66,6 @@ class build_ext_with_cmake(build_ext):
         build_extension_solibs = []
         cwd = os.getcwd()
         for ext in self.extensions:
-            print(f"NOTICE: setup.py building extension library {ext.name}",
-                  f"for target platform {BUILD_TREE}",
-                  file=sys.stderr, flush=True)
-            for var in os.environ:
-                print(f"{var}: {os.environ[var]}",
-                      file=sys.stderr, flush=True)
             self.build_with_cmake(ext)
             if "xrootd" in ext.name:
                 if "win" in sysconfig.get_platform():
