@@ -12,7 +12,7 @@ BUILD_DIR="test_workspace"
 VENV_DIR="test_venv"
 PYTHON_EXE=$(which python3)
 
-echo "=== Starting Local Dry-Run of gluex.hddm_r ==="
+echo "=== Starting Local Dry-Run of gluex.hddm_s ==="
 echo "Target Platform: $(uname -a)"
 
 # 1. Clean up previous attempts
@@ -29,7 +29,7 @@ pip install --upgrade pip setuptools wheel
 
 # 3. Pre-flight check: dummy file creation
 #echo "Checking if setup.py creates the dummy stub..."
-#$PYTHON_EXE -c "import os; dummy='gluex/hddm_r/pyxrootd.so'; print(f'Exists: {os.path.exists(dummy)}')"
+#$PYTHON_EXE -c "import os; dummy='gluex/hddm_s/pyxrootd.so'; print(f'Exists: {os.path.exists(dummy)}')"
 
 # 4. Run the build
 # We use --verbose so we can see the 'spawn' commands and the 'Harvest' logs
@@ -47,3 +47,19 @@ if [ -z "$WHEEL_FILE" ]; then
 fi
 echo "Found Wheel: $WHEEL_FILE"
 
+# Check for the xrootd client module directory and its compiled content instead
+ls -d gluex/hddm_s/pyxrootd/
+ls -l gluex/hddm_s/pyxrootd/client*.so
+
+# 6. Check Linkage
+# We expect to see XrdCl and XrdUtils in the 'needed' list
+echo "Checking clinet*.so internal linkage..."
+readelf -d gluex/hddm_s/pyxrootd/client*.so | grep NEEDED
+
+echo "Checking main hddm_s internal linkage..."
+# Find the compiled .so inside the build directory
+MAIN_SO=$(find build/lib* -name "hddm_s*.so" | grep -v pyxrootd)
+readelf -d "$MAIN_SO" | grep NEEDED
+
+echo "=== Dry Run Complete ==="
+echo "If the 'NEEDED' lists above show libXrdCl, you are ready for GitHub Actions."
