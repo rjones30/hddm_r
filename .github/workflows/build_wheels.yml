@@ -114,8 +114,8 @@ jobs:
 
     env:
       ACTIONS_RUNNER_DEBUG: true  # Enable detailed logging
-      ACTIONS_STEP_DEBUG: true  # Even more detailed logging
-      CIBW_BUILD_VERBOSITY: 2
+      #ACTIONS_STEP_DEBUG: true  # Even more detailed logging
+      #CIBW_BUILD_VERBOSITY: 2
 
     steps:
       - uses: actions/checkout@v4
@@ -139,14 +139,18 @@ jobs:
           # My custom repair commands
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             export BUILD_ROOT={project}/build-$(python -c 'import sys, platform; impl = "pp" if "pypy" in platform.python_implementation().lower() else "cp"; ver = "".join(map(str, sys.version_info[:2])); print(f"{impl}{ver}-{platform.machine()}")') &&
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BUILD_DIR/lib64 &&
+            echo BUILD_ROOT is $BUILD_ROOT &&
+            ls -lR $BUILD_ROOT &&
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BUILD_ROOT/lib64 &&
             auditwheel show {wheel} &&
             auditwheel repair -w {dest_dir} {wheel}
 
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
-            export BUILD_DIR={project}/build-$(python -c 'import sys, platform; impl = "pp" if "pypy" in platform.python_implementation().lower() else "cp"; ver = "".join(map(str, sys.version_info[:2])); print(f"{impl}{ver}-{platform.machine()}")') &&
-            export LIBRARY_PATH=$BUILD_DIR/lib &&
-            DYLD_LIBRARY_PATH=$LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -L "$BUILD_DIR" -w {dest_dir} -v {wheel}
+            export BUILD_ROOT={project}/build-$(python -c 'import sys, platform; impl = "pp" if "pypy" in platform.python_implementation().lower() else "cp"; ver = "".join(map(str, sys.version_info[:2])); print(f"{impl}{ver}-{platform.machine()}")') &&
+            echo BUILD_ROOT is $BUILD_ROOT &&
+            ls -lR $BUILD_ROOT &&
+            export LIBRARY_PATH=$BUILD_ROOT/lib &&
+            DYLD_LIBRARY_PATH=$LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -L "$BUILD_ROOT" -w {dest_dir} -v {wheel}
         with:
           package-dir: .
           output-dir: wheelhouse
