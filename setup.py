@@ -118,11 +118,14 @@ class build_ext_with_cmake(build_ext):
             print(f">>> Skipping actual build for {ext.name} (Dry Run Mode)")
             return 0
         cwd = os.getcwd()
+        if not os.path.isdir(BUILD_ROOT):
+            os.mkdir(BUILD_ROOT)
         if f"{ext.name}.url" in sources:
             if os.path.isdir(ext.name):
                 shutil.rmtree(ext.name, onerror=force_rm)
                 while os.path.isdir(ext.name):
                    time.sleep(0.1)
+            os.chdir(BUILD_ROOT)
             self.spawn(["git", "clone", sources[ext.name + ".url"]])
             os.chdir(ext.name)
             tag = sources[ext.name + ".tag"]
