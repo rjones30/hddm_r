@@ -76,8 +76,8 @@ class build_ext_with_cmake(build_ext):
                              glob.glob(os.path.join(BUILD_ROOT, "**", "*.pyd"), recursive=True)
                     for shlib in shlibs:
                         if os.path.basename(shlib).startswith("client"):
-                            print(f"NOTICE - saving {shlib} to target_dir {target_dir}")
                             target_dir = os.path.join(cwd, "gluex", "hddm_r", "pyxrootd")
+                            print(f"NOTICE - saving {shlib} to target_dir {target_dir}")
                             shutil.copy2(shlib, target_dir)
             if ext.name in templates:
                 build_extension_solibs.append(ext)
