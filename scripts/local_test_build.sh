@@ -59,7 +59,7 @@ readelf -d gluex/hddm_s/pyxrootd/client*.so | grep NEEDED
 
 echo "Checking main hddm_s internal linkage..."
 # Find the compiled .so inside the build directory
-MAIN_SO=$(find build/lib* -name "hddm_s*.so" | grep -v pyxrootd)
+MAIN_SO=$(find build-*/lib* -name "hddm_s*.so" | grep -v pyxrootd)
 readelf -d "$MAIN_SO" | grep NEEDED
 
 echo "=== Dry Run Complete ==="

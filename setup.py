@@ -76,7 +76,7 @@ class build_ext_with_cmake(build_ext):
                              glob.glob(os.path.join(BUILD_ROOT, "**", "*.pyd"), recursive=True)
                     for shlib in shlibs:
                         if os.path.basename(shlib).startswith("client"):
-                            target_dir = os.path.join(cwd, "gluex", "hddm_r", "pyxrootd")
+                            target_dir = os.path.join(self.build_lib, "gluex", "hddm_r", "pyxrootd")
                             print(f"NOTICE - saving {shlib} to target_dir {target_dir}")
                             shutil.copy2(shlib, target_dir)
             if ext.name in templates:
@@ -142,7 +142,7 @@ class build_ext_with_cmake(build_ext):
             # Only happens on Windows, try to install it
             self.spawn(["scripts/install_cmake.bat"])
             cmake = ["cmake.exe"]
-        build_temp = f"build.{ext.name}"
+        build_temp = os.path.join(BUILD_ROOT, f"build.{ext.name}")
         if not os.path.isdir(build_temp):
             os.mkdir(build_temp)
         os.chdir(build_temp)
@@ -212,7 +212,7 @@ class build_ext_with_cmake(build_ext):
                else:
                   shutil.copy2(arlib, re.sub(r"\.a$", "_static.a", arlib))
             shutil.rmtree(ext.name, ignore_errors=True)
-            shutil.rmtree(f"build.{ext.name}", ignore_errors=True)
+            shutil.rmtree(build_temp, ignore_errors=True)
         os.chdir(cwd)
         print("build target architecture is", sysconfig.get_platform())
         if ext.name == "HDDM": # finish construction of the hddm module
@@ -322,7 +322,6 @@ setuptools.setup(
     packages = ["gluex.hddm_r", "gluex.hddm_r.pyxrootd"],
     #namespace_packages=['gluex'],
     package_data = {"gluex.hddm_r": ["rest.xml"] + ext_patterns,
-                    "gluex.hddm_r.pyxrootd": ext_patterns,
     },
     ext_modules = [
       CMakeExtension("zlib"),
