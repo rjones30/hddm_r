@@ -66,6 +66,7 @@ class build_ext_with_cmake(build_ext):
         build_extension_solibs = []
         cwd = os.getcwd()
         for ext in self.extensions:
+            print(f"NOTICE - building {ext.name} in {BUILD_ROOT}")
             self.build_with_cmake(ext)
             if "xrootd" in ext.name:
                 if "win" in sysconfig.get_platform():
@@ -75,6 +76,7 @@ class build_ext_with_cmake(build_ext):
                              glob.glob(os.path.join(BUILD_ROOT, "**", "*.pyd"), recursive=True)
                     for shlib in shlibs:
                         if os.path.basename(shlib).startswith("client"):
+                            print(f"NOTICE - saving {shlib} to target_dir {target_dir}")
                             target_dir = os.path.join(cwd, "gluex", "hddm_r", "pyxrootd")
                             shutil.copy2(shlib, target_dir)
             if ext.name in templates:
@@ -173,6 +175,11 @@ class build_ext_with_cmake(build_ext):
             cmake_args += [f"-DXRDCL_LIB_ONLY:bool=on"]
             cmake_args += [f"-DOPENSSL_INCLUDE_DIR:path={BUILD_ROOT}/include"]
             cmake_args += [f"-DCMAKE_CXX_FLAGS=-D_GLIBCXX_USE_CXX11_ABI=1 -Wabi-tag"]
+            cmake_args += ["--log-level=VERBOSE",                 # Tell CMake to be chatty
+                           "-DPython_FIND_DEBUG=ON",              # Special debug mode for the Python module
+                           "-DCMAKE_MESSAGE_INDENT_LEVEL=2",      # Make logs readable
+                           "-DCMAKE_MESSAGE_CONTEXT_SHOW=ON",     # Show where messages are coming from
+                          ]
         else:
             cmake_args += [f"-DBUILD_SHARED_LIBS:BOOL=off"]
         if "hdf5" in ext.name:
