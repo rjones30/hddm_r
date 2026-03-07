@@ -118,8 +118,7 @@ class build_ext_with_cmake(build_ext):
             print(f">>> Skipping actual build for {ext.name} (Dry Run Mode)")
             return 0
         cwd = os.getcwd()
-        if not os.path.isdir(BUILD_ROOT):
-            os.mkdir(BUILD_ROOT)
+        os.makedirs(BUILD_ROOT, exist_ok=True)
         if f"{ext.name}.url" in sources:
             if os.path.isdir(ext.name):
                 shutil.rmtree(ext.name, onerror=force_rm)
@@ -146,8 +145,7 @@ class build_ext_with_cmake(build_ext):
             self.spawn(["scripts/install_cmake.bat"])
             cmake = ["cmake.exe"]
         build_temp = os.path.join(BUILD_ROOT, f"build.{ext.name}")
-        if not os.path.isdir(build_temp):
-            os.mkdir(build_temp)
+        os.makedirs(build_temp, exist_ok=True)
         os.chdir(build_temp)
         if "arm64" in sysconfig.get_platform():
             os.environ["ARCHFLAGS"] = "-arch arm64"
@@ -178,11 +176,11 @@ class build_ext_with_cmake(build_ext):
             cmake_args += [f"-DXRDCL_LIB_ONLY:bool=on"]
             cmake_args += [f"-DOPENSSL_INCLUDE_DIR:path={BUILD_ROOT}/include"]
             cmake_args += [f"-DCMAKE_CXX_FLAGS=-D_GLIBCXX_USE_CXX11_ABI=1 -Wabi-tag"]
-            cmake_args += ["--log-level=VERBOSE",                 # Tell CMake to be chatty
-                           "-DPython_FIND_DEBUG=ON",              # Special debug mode for the Python module
-                           "-DCMAKE_MESSAGE_INDENT_LEVEL=2",      # Make logs readable
-                           "-DCMAKE_MESSAGE_CONTEXT_SHOW=ON",     # Show where messages are coming from
-                          ]
+            #cmake_args += ["--log-level=VERBOSE",                 # Tell CMake to be chatty
+            #               "-DPython_FIND_DEBUG=ON",              # Special debug mode for the Python module
+            #               "-DCMAKE_MESSAGE_INDENT_LEVEL=2",      # Make logs readable
+            #               "-DCMAKE_MESSAGE_CONTEXT_SHOW=ON",     # Show where messages are coming from
+            #              ]
         else:
             cmake_args += [f"-DBUILD_SHARED_LIBS:BOOL=off"]
         if "hdf5" in ext.name:
